@@ -1,5 +1,6 @@
 # NNBuilder: A Simple Neural Network Builder for PyTorch
 
+
 # Overview
 
 NNBuilder is a lightweight, chainable utility class built on top of PyTorch’s `nn.Module`, designed to simplify the construction of sequential, fully‑connected neural networks.
@@ -12,7 +13,6 @@ This is particularly useful for:
 - Tabular and vector‑based classification problems
 - Reducing boilerplate while preserving full PyTorch control
 
-<br>
 
 # Class Description
 
@@ -24,7 +24,6 @@ NNBuilder encapsulates a feed‑forward neural network composed of:
 
 Layers are stored internally in an `nn.ModuleList` and executed sequentially during the forward pass.
 
-<br>
 
 # Builder Functions
 
@@ -41,7 +40,6 @@ Adds a fully connected (dense) layer to the model and optionally appends an acti
 
 - `self` (enables method chaining)
 
-
 ### *add_dropout(p: float = 0.5)*
 Adds a dropout layer using `torch.nn.Dropout`.
 
@@ -53,11 +51,9 @@ Adds a dropout layer using `torch.nn.Dropout`.
 
 - `self`
 
-
 ### *forward(x)*
 Defines the forward pass by applying each stored layer in sequence to the input tensor.
 
-<br>
 
 # Using NNBuilder in Your Own Code
 The NNBuilder class is defined in a standalone Python file named nnbuilder.py. To use it in your own scripts or notebooks, ensure that this file is accessible on Python’s import path.
@@ -82,7 +78,6 @@ Once `nnbuilder.py` is in the same directory, you can import the class as follow
 from nnbuilder import NNBuilder
 ```
 
-<br>
 
 # Example: Binary Classification with a Sklearn Dataset
 The following example demonstrates how to:
@@ -230,8 +225,6 @@ with torch.no_grad():
 
 print(f'Model accuracy: {accuracy:.3f}')
 ```
-
-<br>
 
 # Summary
 
