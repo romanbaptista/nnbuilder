@@ -19,7 +19,7 @@ This is particularly useful for:
 NNBuilder encapsulates a feed‑forward neural network composed of:
 
 - Fully connected (`nn.Linear`) layers
-- Optional activation functions
+- Activation functions (added automatically or explicitly)
 - Optional dropout regularization
 
 Layers are stored internally in an `nn.ModuleList` and executed sequentially during the forward pass.
@@ -36,9 +36,26 @@ Adds a fully connected (dense) layer to the model and optionally appends an acti
 - `out_features` – Number of output features
 - `activation` – Activation function identifier (`'relu'` or `'sigmoid'`)
 
+If `activation` is provided, the corresponding activation layer is automatically appended immediately after the dense layer.
+
 **Returns**
 
 - `self` (enables method chaining)
+
+
+### *add_activation(activation: str)*
+Adds an activation layer explicitly.
+
+This allows activation functions to be inserted independently of dense layers, enabling more flexible architectural definitions while still supporting automatic activation addition via `add_dense()`.
+
+**Parameters**
+
+- `activation` – Activation function identifier (`'relu'` or `'sigmoid'`)
+
+**Returns**
+
+- `self`
+
 
 ### *add_dropout(p: float = 0.5)*
 Adds a dropout layer using `torch.nn.Dropout`.
@@ -51,12 +68,13 @@ Adds a dropout layer using `torch.nn.Dropout`.
 
 - `self`
 
+
 ### *forward(x)*
 Defines the forward pass by applying each stored layer in sequence to the input tensor.
 
 
 # Using NNBuilder in Your Own Code
-The NNBuilder class is defined in a standalone Python file named nnbuilder.py. To use it in your own scripts or notebooks, ensure that this file is accessible on Python’s import path.
+The NNBuilder class is defined in a standalone Python file named `nnbuilder.py`. To use it in your own scripts or notebooks, ensure that this file is accessible on Python’s import path.
 
 ## File Placement
 The simplest and most common setup is to place `nnbuilder.py` in the same directory as the Python script (`.py`) or Jupyter notebook (`.ipynb`) where you want to define and train your model.
@@ -68,26 +86,22 @@ project_directory/
 ├── train_model.py
 └── experiment.ipynb
 ```
-
 In this arrangement, Python will automatically be able to locate and import NNBuilder.
 
 ## Importing NNBuilder
-Once `nnbuilder.py` is in the same directory, you can import the class as follows:
 
+Once `nnbuilder.py` is in the same directory, you can import the class as follows:
 ```python
 from nnbuilder import NNBuilder
 ```
 
-
 # Example: Binary Classification with a Sklearn Dataset
 The following example demonstrates how to:
-
-- Load a real‑world dataset from `scikit‑learn`
+- Load a real‑world dataset from scikit‑learn
 - Preprocess the data
-- Build a neural network using `NNBuilder`
+- Build a neural network using NNBuilder
 
 ## Load and process data
-
 ```python
 from nnbuilder import NNBuilder
 
@@ -125,10 +139,10 @@ print(f"Number of samples: {num_samples}")   # e.g. 455
 print(f"Number of features: {num_features}") # e.g. 30
 ```
 
-## Defining the model with `NNBuilder`
+## Defining the model with NNBuilder
 
+Activations can be added automatically via `add_dense()`:
 ```python
-
 my_model = (
     NNBuilder()
     .add_dense(in_features=num_features, out_features=64, activation='relu')
@@ -138,10 +152,23 @@ my_model = (
 )
 ```
 
+Or explicitly using `add_activation()`:
+```python
+my_model = (
+    NNBuilder()
+    .add_dense(num_features, 64)
+    .add_activation('relu')
+    .add_dense(64, 32)
+    .add_activation('relu')
+    .add_dropout(0.5)
+    .add_dense(32, 1)
+    .add_activation('sigmoid')
+)
+```
+
 ## Comparison with standard PyTorch implementation
 
-Below is the equivalent model definition written using traditional PyTorch class boilerplate.
-
+Below is the equivalent model definition written using traditional PyTorch class boilerplate:
 ```python
 class CustomNN(nn.Module):
 
@@ -204,9 +231,10 @@ for epoch in range(epochs):
     
     # Print summary
     print(f'Epoch {epoch + 1}: Loss was {running_loss / len(train_loader)}')
+``
 ```
 
-## Evaluate model
+## Evaluate Model
 
 ```python
 # Use non-gradient calculation mode
@@ -227,7 +255,6 @@ print(f'Model accuracy: {accuracy:.3f}')
 ```
 
 # Summary
-
 NNBuilder provides a compact, readable abstraction for defining sequential neural networks in PyTorch. It intentionally separates architecture definition from training logic, enabling clean experimentation and easy comparison with traditional PyTorch implementations.
 
-For simple feed‑forward models, it offers a significant reduction in boilerplate without sacrificing transparency or control.
+The addition of explicit activation layers allows greater architectural flexibility while preserving the simplicity of automatic activation handling for common use cases.

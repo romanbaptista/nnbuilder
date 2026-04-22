@@ -25,16 +25,22 @@ class NNBuilder(nn.Module):
     def get_activation_layer(self, name: str):
         return self.ACTIVATIONS[name]
 
-
     # LAYER FUNCTIONS
+
+    def add_activation(self, activation: str = None):
+        # Get activation layer from string
+        activation_layer = self.get_activation_layer(activation)
+        # Append instance of activation layer
+        self.layers.append(activation_layer())
+
+        return self
 
     def add_dense(self, in_features: int, out_features: int, activation: str = None):
         # Add linear layer
         self.layers.append(nn.Linear(in_features, out_features))
         # Add activation layer
         if activation:
-            activation_layer = self.get_activation_layer(activation)
-            self.layers.append(activation_layer())
+            self.add_activation(activation)
 
         return self
     
@@ -51,3 +57,4 @@ class NNBuilder(nn.Module):
             x = layer(x)
         
         return x
+
