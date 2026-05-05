@@ -141,18 +141,8 @@ print(f"Number of features: {num_features}") # e.g. 30
 
 ## Defining the model with NNBuilder
 
-Activations can be added automatically via `add_dense()`:
-```python
-my_model = (
-    NNBuilder()
-    .add_dense(in_features=num_features, out_features=64, activation='relu')
-    .add_dense(in_features=64, out_features=32, activation='relu')
-    .add_dropout(p=0.5)
-    .add_dense(in_features=32, out_features=1, activation='sigmoid')
-)
-```
+Activations can be added explicitly using `add_activation()`:
 
-Or explicitly using `add_activation()`:
 ```python
 my_model = (
     NNBuilder()
@@ -163,6 +153,17 @@ my_model = (
     .add_dropout(0.5)
     .add_dense(32, 1)
     .add_activation('sigmoid')
+)
+```
+
+Or automatically, and more cleanly, via `add_dense()`:
+```python
+my_model = (
+    NNBuilder()
+    .add_dense(in_features=num_features, out_features=64, activation='relu')
+    .add_dense(in_features=64, out_features=32, activation='relu')
+    .add_dropout(p=0.5)
+    .add_dense(in_features=32, out_features=1, activation='sigmoid')
 )
 ```
 
