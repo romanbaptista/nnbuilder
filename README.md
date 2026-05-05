@@ -232,7 +232,6 @@ for epoch in range(epochs):
     
     # Print summary
     print(f'Epoch {epoch + 1}: Loss was {running_loss / len(train_loader)}')
-``
 ```
 
 ## Evaluate Model
